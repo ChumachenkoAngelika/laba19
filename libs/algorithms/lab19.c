@@ -9,7 +9,7 @@
 #include "../data_struct/string/tusk/test_processing_string.h"
 #define ASSERT_STRING(expected, got) assertString(expected, got, __FILE__, __FUNCTION__, __LINE__);
 #define ASSERT_STRING_INT_ARR(expected, size_expected, got, size_got) assertStringIntArr(expected, size_expected, got, size_got, __FILE__, __FUNCTION__, __LINE__);
-//tusk1
+//tusk 1
 void toColFromRow(FILE *file){
     char n_arr[100];
     fgets(n_arr, 100, file);
@@ -125,8 +125,109 @@ void test3_tusk1(){
     remove("my_file.txt");
 }
 
+
+
+void float_values(FILE *file){
+    char values[1000];
+    char arr_res[1000][1000];
+    int size = 0;
+    while(feof(file) == 0){
+        if(fgets(values,1000, file)!=0) {
+            *findSpaceReverse(values + strlen_(values) - 1, values) == '\n' ? *findSpaceReverse(
+                    values + strlen_(values) - 1, values) = '\0' : *findSpaceReverse(values + strlen_(values) - 1,
+                                                                                     values);
+            char *point = find_symbl(values, '.');
+            if (*point == '\0') {
+                *point = '.';
+                *(point + 1) = '0';
+                *(point + 2) = '0';
+                *(point + 3) = '\n';
+                *(point + 4) = '\0';
+            } else if (*point == '.' && *(point + 2) == '\0'){
+                *(point + 2) = '0';
+                *(point + 3) = '\n';
+                *(point + 4) = '\0';
+            } else {
+                *(point + 3) = '\n';
+                *(point + 4) = '\0';
+            }
+            *copy(values, strlen_(values)+values, arr_res[size]) = '\0';
+            size++;
+        }
+    }
+    fseek(file, 0L, 0);
+
+    for(int i = 0; i < size; i++){
+        char str[1000] = {0};
+        char *begin = str;
+        *copy(arr_res[i], arr_res[i]+ strlen_(arr_res[i]), begin) = '\0';
+        fputs(str, file);
+    }
+    chsize(fileno(file), ftell(file));
+}
+
+void test1_tusk2(){
+    char s[1000] = "159236478\n951632874\n323232.2535";
+    FILE *f = fopen("my_file.txt", "w+");
+    if(f==NULL) {
+        printf("NULL");
+        return;
+    }
+    fputs(s,f);
+    fseek(f,0L,0);
+    float_values(f);
+    fclose(f);
+    FILE *file = fopen("my_file.txt", "r");
+    if(file==NULL) {
+        printf("NULL");
+        return;
+    }
+    char res[1000];
+    int size = 0;
+    while (feof(file)==0){
+        res[size] = (char)(getc(file));
+        size++;
+    }
+    res[size-1]='\0';
+    fclose(file);
+    ASSERT_STRING("159236478.00\n951632874.00\n323232.25\n",res)
+    remove("my_file.txt");
+}
+void test2_tusk2(){
+    char s[1000] = "159236478.1\n95.1632874\n323232";
+    FILE *f = fopen("my_file.txt", "w+");
+    if(f==NULL) {
+        printf("NULL");
+        return;
+    }
+    fputs(s,f);
+    fseek(f,0L,0);
+    float_values(f);
+    fclose(f);
+    FILE *file = fopen("my_file.txt", "r");
+    if(file==NULL) {
+        printf("NULL");
+        return;
+    }
+    char res[1000];
+    int size = 0;
+    while (feof(file)==0){
+        res[size] = (char)(getc(file));
+        size++;
+    }
+    res[size-1]='\0';
+    fclose(file);
+    ASSERT_STRING("159236478.10\n95.16\n323232.00\n",res)
+    remove("my_file.txt");
+}
+
+
+
+
 void test_lab19() {
     test1_tusk1();
     test2_tusk1();
     test3_tusk1();
+    test1_tusk2();
+    test2_tusk2();
 }
