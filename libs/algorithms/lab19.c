@@ -542,6 +542,121 @@ void test2_tusk5(){
 }
 
 
+typedef struct polynomial{
+    int index;//показатель
+    int coefficient;//число
+}pol;
+
+void delet_res_x(FILE *f, int x){
+    int res = 0;
+    int values[10000];
+    int size = 0;
+    FILE *Fres = fopen("res.txt", "w+b");
+    bool flag_add = true;
+    while (feof(f) == 0) {
+        pol value;
+        if (fread(&value, sizeof(pol), 1, f) == 1) {
+            values[size] = value.coefficient;
+            values[size + 1] = value.index;
+            size += 2;
+            if (value.index == 0) {
+                res += value.coefficient;
+                if (res == 0) {
+                    flag_add = false;
+                }
+                res = 0;
+                if (flag_add) {
+                    pol ans;
+                    int i = 0;
+                    while (i < size) {
+                        ans.coefficient = values[i];
+                        ans.index = values[i + 1];
+                        i += 2;
+                        fwrite(&ans, sizeof(pol), 1, Fres);
+                    }
+                }
+                flag_add = true;
+                size = 0;
+
+            } else {
+                res += (int) pow((double) x, (double) value.index) * value.coefficient;
+            }
+        }
+    }
+    fseek(f, 0L, 0);
+    fseek(Fres, 0L, 0);
+
+    pol ans;
+    while (feof(Fres) == 0){
+        if(fread(&ans, sizeof(ans), 1, Fres) !=0){
+            fwrite(&ans, sizeof(ans), 1,f);
+        }
+    }
+    fclose(Fres);
+    remove("res.txt");
+    chsize(fileno(f), ftell(f));
+}
+
+void test1_tusk6(){
+    pol structValues;
+    int arr[24] = {1,4,5,3,4,2,-3,1,1,0,3,3,2,2,10,1,12,0,1,2,-3,1,2,0};
+    FILE *f = fopen("my_file.txt", "w+b");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    for(int index = 0; index < 24; index+=2){
+        structValues.coefficient = arr[index];
+        structValues.index = arr[index+1];
+        fwrite(&structValues, sizeof(pol), 1, f);
+    }
+    pol res;
+    fseek(f, 0L, 0);
+    delet_res_x(f, 2);
+    fclose(f);
+    f = fopen("my_file.txt", "rb");
+    int res_arr[24];
+    int size_res_arr = 0;
+    while (feof(f)==0){
+        if(fread(&res, sizeof(pol), 1, f)==1){
+            res_arr[size_res_arr] = res.coefficient;
+            res_arr[size_res_arr+1] = res.index;
+            size_res_arr+=2;
+        }
+    }
+    fclose(f);
+    int expected[] = {1, 4, 5, 3, 4, 2, -3, 1, 1, 0, 3, 3, 2, 2, 10, 1, 12, 0};
+    ASSERT_STRING_INT_ARR(expected, 18, res_arr, size_res_arr)
+    remove("my_file.txt");
+}
+void test2_tusk6(){
+    pol structValues;
+    int arr[22] = {2,4,4,3,-5,2,-1,1,1,0,1,3,2,1,3,0,1,2,-3,1,2,0};
+    FILE *f = fopen("my_file.txt", "w+b");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    for(int index = 0; index < 22; index+=2){
+        structValues.coefficient = arr[index];
+        structValues.index = arr[index+1];
+        fwrite(&structValues, sizeof(pol), 1, f);
+    }
+    fseek(f, 0L, 0);
+    pol res;
+    delet_res_x(f, -1);
+    fclose(f);
+    f = fopen("my_file.txt", "rb");
+    int res_arr[22];
+    int size_res_arr = 0;
+    while (feof(f)==0){
+        if(fread(&res, sizeof(pol), 1, f)==1){
+            res_arr[size_res_arr] = res.coefficient;
+            res_arr[size_res_arr+1] = res.index;
+            size_res_arr+=2;
+        }
+    }
+    fclose(f);
+    int expected[] = {2,4,4,3,-5,2,-1,1,1,0,1,2,-3,1,2,0};
+    ASSERT_STRING_INT_ARR(expected, 16, res_arr, size_res_arr)
+    remove("my_file.txt");
+}
 
 void test_lab19() {
     test1_tusk1();
@@ -557,4 +672,6 @@ void test_lab19() {
     test3_tusk4();
     test1_tusk5();
     test2_tusk5();
+    test1_tusk6();
+    test2_tusk6();
 }
