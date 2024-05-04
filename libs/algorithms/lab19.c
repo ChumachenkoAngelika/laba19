@@ -222,6 +222,128 @@ void test2_tusk2(){
 }
 
 
+int doSolve(char s, int a, int b){
+    if(s == '+')
+        return a+b;
+    else if(s == '-')
+        return a-b;
+    else if(s == '*')
+        return a*b;
+    else if(s == '/')
+        return a/b;
+    else if(s == '%')
+        return a%b;
+    fprintf(stderr, "Fail");
+    return 0;
+}
+
+void arithmetic_solve(FILE *file){
+    char data[10];
+    fgets(data, 9, file);
+    int a, b, c;
+    a = atoi(&data[0]);
+    b = atoi(&data[2]);
+    c = atoi(&data[4]);
+    int res = doSolve(data[1],a,b);
+    res = doSolve(data[3], res, c);
+    fputs("\n", file);
+    char ans[4];
+    char *begin = ans;
+    if(0<=res && res <= 9){
+        ans[0] = (char)(res + 48);
+        *(begin+1) = '\0';
+    }
+    if(10<=res && res <= 99){
+        ans[0] = (char)((res)/10 + 48);
+        ans[1] = (char)((res)%10 + 48);
+        *(begin+2) = '\0';
+    }
+    if(100<=res && res <= 729){
+        ans[0] = (char)((res)/100 + 48);
+        ans[1] = (char)((res/10)%10 + 48);
+        ans[2] = (char)((res)%10 + 48);
+        *(begin+3) = '\0';
+    }
+    if(0>res && res >= -9){
+        res*=-1;
+        ans[0] = '-';
+        ans[1] = (char)(res + 48);
+        *(begin+2) = '\0';
+    }
+    if(-10>=res && res >= -99){
+        res*=-1;
+        ans[0] = '-';
+        ans[1] = (char)((res)/10 + 48);
+        ans[2] = (char)((res)%10 + 48);
+        *(begin+3) = '\0';
+    }
+    if(-100>=res && res >= -729){
+        res*=-1;
+        ans[0] = '-';
+        ans[1] = (char)((res)/100 + 48);
+        ans[2] = (char)((res/10)%10 + 48);
+        ans[3] = (char)((res)%10 + 48);
+        *(begin+4) = '\0';
+    }
+    fputs(ans, file);
+}
+void test1_tusk3(){
+    char s[1000] = "1-5*3";
+    FILE *f = fopen("my_file.txt", "w+");
+    if(f==NULL) {
+        printf("NULL");
+        return;
+    }
+    fputs(s,f);
+    fseek(f, 0L, 0);
+    arithmetic_solve(f);
+    fclose(f);
+    f = fopen("my_file.txt", "r");
+    char ans[10];
+    fgets(ans, 9, f);
+    fgets(ans, 9, f);
+    fclose(f);
+    ASSERT_STRING("-12", ans)
+    remove("my_file.txt");
+}
+void test2_tusk3(){
+    char s[1000] = "9*9*3";
+    FILE *f = fopen("my_file.txt", "w+");
+    if(f==NULL) {
+        printf("NULL");
+        return;
+    }
+    fputs(s,f);
+    fseek(f, 0L, 0);
+    arithmetic_solve(f);
+    fclose(f);
+    f = fopen("my_file.txt", "r");
+    char ans[10];
+    fgets(ans, 9, f);
+    fgets(ans, 9, f);
+    fclose(f);
+    ASSERT_STRING("243", ans)
+    remove("my_file.txt");
+}
+void test3_tusk3(){
+    char s[1000] = "3+8%10";
+    FILE *f = fopen("my_file.txt", "w+");
+    if(f==NULL) {
+        printf("NULL");
+        return;
+    }
+    fputs(s,f);
+    fseek(f, 0L, 0);
+    arithmetic_solve(f);
+    fclose(f);
+    f = fopen("my_file.txt", "r");
+    char ans[10];
+    fgets(ans, 9, f);
+    fgets(ans, 9, f);
+    fclose(f);
+    ASSERT_STRING("1", ans)
+    remove("my_file.txt");
+}
 
 
 void test_lab19() {
@@ -230,4 +352,6 @@ void test_lab19() {
     test3_tusk1();
     test1_tusk2();
     test2_tusk2();
+    test1_tusk3();
+    test2_tusk3();
 }
