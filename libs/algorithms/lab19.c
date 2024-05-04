@@ -346,6 +346,127 @@ void test3_tusk3(){
 }
 
 
+void removeSomeStr(FILE *f, char *mask){
+    char arr[100000];
+    char *begin = arr;
+    while (feof(f) == 0){
+        char str[1000];
+        char *beginStr = str;
+        fgets(str, 1000, f);
+        *find_symbl(str, '\n') = '\0';
+        begin = copy(beginStr, beginStr+strlen_(str), begin);
+        *begin = ' ';
+        begin++;
+    }
+    *(begin-1) = '\0';
+    BagOfWords words;
+    getBagOfWords(&words, arr);
+    char res_arr[100000];
+    char *begin_res = res_arr;
+    int countSpase = 0;
+    for(int i = 0; i < words.size; i++){
+        if(mask_in_str(&words.words[i], mask)){
+            countSpase++;
+            begin_res = copy(words.words[i].begin, words.words[i].end, begin_res);
+            if(countSpase == 7){
+                countSpase = 0;
+                *begin_res = '\n';
+            } else
+                *begin_res = ' ';
+            begin_res++;
+
+        }
+    }
+    words.size = 0;
+    *(begin_res-1) = '\n';
+    *(begin_res) = '\0';
+    fseek(f, 0L, 0);
+    fputs(res_arr, f);
+    chsize(fileno(f), ftell(f));
+}
+void test1_tusk4(){
+    char s[10000] = "asdf ggasfasf elmberr\nekoveuv ejweuvr erwcvuiev";
+    FILE *f = fopen("my_file.txt", "w+");
+    if(f==NULL) {
+        printf("NULL");
+        return;
+    }
+    fputs(s,f);
+    fseek(f, 0L, 0);
+    removeSomeStr(f, "e");
+    fclose(f);
+    FILE *file = fopen("my_file.txt", "r");
+    if(file==NULL) {
+        printf("NULL");
+        return;
+    }
+    char res[1000];
+    int size = 0;
+    while (feof(file)==0){
+        res[size] = (char)(getc(file));
+        size++;
+    }
+    res[size-1]='\0';
+    fclose(file);
+    ASSERT_STRING("elmberr ekoveuv ejweuvr erwcvuiev\n", res)
+    remove("my_file.txt");
+}
+void test2_tusk4(){
+    char s[10000] = "ggasefasfffff aesdf ggasefasf elmberr\nekoveuv ejweuvr erwhcvuiev daverwer homE verte\newegvsdv egvwvsdv";
+    FILE *f = fopen("my_file.txt", "w+");
+    if(f==NULL) {
+        printf("NULL");
+        return;
+    }
+    fputs(s,f);
+    fseek(f, 0L, 0);
+    removeSomeStr(f, "e");
+    fclose(f);
+    FILE *file = fopen("my_file.txt", "r");
+    if(file==NULL) {
+        printf("NULL");
+        return;
+    }
+    char res[1000];
+    int size = 0;
+    while (feof(file)==0){
+        res[size] = (char)(getc(file));
+        size++;
+    }
+    res[size-1]='\0';
+    fclose(file);
+    ASSERT_STRING("ggasefasfffff aesdf ggasefasf elmberr ekoveuv ejweuvr erwhcvuiev\ndaverwer verte ewegvsdv egvwvsdv\n", res);
+    remove("my_file.txt");
+}
+void test3_tusk4(){
+    char s[10000] = "ggasefasfffff aesdf\nggasefasf elmberr\nekoveuv ejweuvr\nerwhcvuiev daverwer homE verte\newegvsdv egvwvsdv";
+    FILE *f = fopen("my_file.txt", "w+");
+    if(f==NULL) {
+        printf("NULL");
+        return;
+    }
+    fputs(s,f);
+    fseek(f, 0L, 0);
+    removeSomeStr(f, "e");
+    fclose(f);
+    FILE *file = fopen("my_file.txt", "r");
+    if(file==NULL) {
+        printf("NULL");
+        return;
+    }
+    char res[1000];
+    int size = 0;
+    while (feof(file)==0){
+        res[size] = (char)(getc(file));
+        size++;
+    }
+    res[size-1]='\0';
+    fclose(file);
+    ASSERT_STRING("ggasefasfffff aesdf ggasefasf elmberr ekoveuv ejweuvr erwhcvuiev\ndaverwer verte ewegvsdv egvwvsdv\n", res);
+    remove("my_file.txt");
+}
+
+
 void test_lab19() {
     test1_tusk1();
     test2_tusk1();
@@ -354,4 +475,9 @@ void test_lab19() {
     test2_tusk2();
     test1_tusk3();
     test2_tusk3();
+    test3_tusk3();
+    test1_tusk4();
+    test2_tusk4();
+    test3_tusk4();
+
 }
