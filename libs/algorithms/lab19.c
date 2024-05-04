@@ -467,6 +467,82 @@ void test3_tusk4(){
 }
 
 
+
+
+
+
+
+void more_large_word(FILE *f){
+    char largeWods[10000];
+    char *begin = largeWods;
+    while (feof(f) == 0) {
+        char string[10000];
+        if (fgets(string, 10000, f) != 0) {
+            *find_symbl(string, '\n') = '\0';
+            char bigWord[1000];
+            largestWord(string, bigWord);
+            begin = copy(bigWord, bigWord + strlen_(bigWord), begin);
+            *begin = '\n';
+            begin++;
+        }
+    }
+    *(begin-1) = '\0';
+    fseek(f,0L,0);
+    fputs(largeWods,f);
+    chsize(fileno(f), ftell(f));
+}
+
+
+void test1_tusk5(){
+    char s[10000] = "ggasefasfffff aesdf\nggasefasf elmberr\nekoveuv ejweuvr\nerwhcvuiev daverwer homE verte\nttttwegvsdv egvwvsdv";
+    FILE *f = fopen("my_file.txt", "w+");
+    fputs(s, f);
+    fseek(f, 0L,0);
+    more_large_word(f);
+    fclose(f);
+    FILE *file = fopen("my_file.txt", "r");
+    if(file==NULL) {
+        printf("NULL");
+        return;
+    }
+    char res[100000];
+    int size = 0;
+    while (feof(file)==0){
+        res[size] = (char)(getc(file));
+        size++;
+    }
+    res[size-1]='\0';
+    fclose(file);
+    ASSERT_STRING("ggasefasfffff\nggasefasf\nekoveuv\nerwhcvuiev\nttttwegvsdv", res);
+    remove("my_file.txt");
+}
+
+void test2_tusk5(){
+    char s[10000] = "ggasefasff\nelmberr";
+    FILE *f = fopen("my_file.txt", "w+");
+    fputs(s, f);
+    fseek(f, 0L,0);
+    more_large_word(f);
+    fclose(f);
+    FILE *file = fopen("my_file.txt", "r");
+    if(file==NULL) {
+        printf("NULL");
+        return;
+    }
+    char res[100000];
+    int size = 0;
+    while (feof(file)==0){
+        res[size] = (char)(getc(file));
+        size++;
+    }
+    res[size-1]='\0';
+    fclose(file);
+    ASSERT_STRING("ggasefasff\nelmberr", res);
+    remove("my_file.txt");
+}
+
+
+
 void test_lab19() {
     test1_tusk1();
     test2_tusk1();
@@ -479,5 +555,6 @@ void test_lab19() {
     test1_tusk4();
     test2_tusk4();
     test3_tusk4();
-
+    test1_tusk5();
+    test2_tusk5();
 }
