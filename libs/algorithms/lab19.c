@@ -968,6 +968,178 @@ void test2_tusk9(){
     ASSERT_STRING_INT_ARR(expected_val, 5, values_max, size)
     remove("my_file.txt");
 }
+
+
+typedef struct product{
+    char name_product[30];
+    int price_one;
+    int prce_all;
+    int count;
+}product;
+typedef struct send{
+    char name_product[30];
+    int count;
+}send;
+void sort_product(FILE *f, FILE *g){
+    product prod;
+    send sendProd;
+    FILE *res = fopen("res.txt", "w+b");
+    while (feof(f)==0){
+
+        if(fread(&prod, sizeof(product), 1, f) !=0){
+            while (feof(g)==0){
+                if(fread(&sendProd, sizeof(send), 1, g) != 0){
+                    if(strcmp_(prod.name_product, sendProd.name_product)){
+                        prod.count-=sendProd.count;
+                        prod.prce_all = prod.price_one*prod.count;
+                        break;
+                    }
+                }
+            }
+            if(prod.count!=0){
+                fwrite(&prod, sizeof(prod), 1,res);
+            }
+        }
+    }
+    fseek(res, 0L, 0);
+    fseek(f, 0L, 0);
+    while (feof(res) == 0){
+        if(fread(&prod, sizeof(prod), 1, res) !=0){
+            fwrite(&prod, sizeof(prod), 1, f);
+        }
+    }
+    fclose(res);
+    chsize(fileno(f), ftell(f));
+    remove("res.txt");
+}
+void test1_tusk10(){
+    product priseList;
+    int arr[] = {50, 3000, 60,300, 30000, 100, 88, 880, 10, 32, 352,11,120,1200, 10, 5000, 10000, 2,45, 360, 8};
+    char name[][30] = {"juice", "PIVO", "milk", "chocolate", "vodka", "brandy", "fish"};
+    int count_product = 0;
+    FILE *f = fopen("F_my_file.txt", "w+b");
+    for(int i = 0; i < 7; i++){
+        char *beginName = name[i];
+        copy(beginName, beginName+30,priseList.name_product);
+        priseList.price_one = arr[count_product];
+        count_product++;
+        priseList.prce_all = arr[count_product];
+        count_product++;
+        priseList.count = arr[count_product];
+        count_product++;
+        fwrite(&priseList, sizeof(product), 1, f);
+    }
+    send sendList;
+    FILE *g = fopen("G_my_file.txt", "wb");
+    int countSend[] = {30, 60,10,10,3};
+    for(int i = 0; i < 5; i++){
+        char *beginName = name[i];
+        copy(beginName, beginName+30,sendList.name_product);
+        sendList.count = countSend[i];
+        fwrite(&sendList, sizeof(sendList), 1, g);
+    }
+    fclose(g);
+    g = fopen("G_my_file.txt", "rb");
+    fseek(f, 0L, 0);
+    sort_product(f,g);
+    fclose(f);
+    fclose(g);
+    int res[1000];
+    f = fopen("F_my_file.txt", "rb");
+    product got;
+    int size = 0;
+    char got_arr[3000][30];
+    int size_arr = 0;
+    while (feof(f) == 0){
+        if(fread(&got, sizeof(got), 1, f)!=0){
+            res[size] = got.price_one;
+            res[size+1] = got.prce_all;
+            res[size+2] = got.count;
+            size+=3;
+            char *begin_expected = got.name_product;
+            copy(begin_expected, begin_expected+30, got_arr[size_arr]);
+            size_arr++;
+        }
+    }
+    fclose(f);
+    int expected_arr[] = {50,1500,30,300,12000,40,32,32,1,120,840,7,5000,10000,2,45,360,8};
+    char expected_str[][30] = {"juice", "PIVO", "chocolate", "vodka", "brandy", "fish"};
+    bool flag = true;
+    for(int i = 0; i < size_arr;i++){
+        if(!strcmp_(expected_str[i], got_arr[i])){
+            flag = false;
+        }
+    }
+    if(flag){
+        ASSERT_STRING_INT_ARR(expected_arr, 18, res, size);
+    }
+    remove("F_my_file.txt");
+    remove("G_my_file.txt");
+}
+void test2_tusk10(){
+    product priseList;
+    int arr[] = {50, 3000, 60,300, 30000, 100, 88, 880, 10, 32, 352,11,120,1200, 10, 5000, 10000, 2,45, 360, 8};
+    char name[][30] = {"juice", "PIVO", "milk", "chocolate", "vodka", "brandy", "fish"};
+    int count_product = 0;
+    FILE *f = fopen("F_my_file.txt", "w+b");
+    for(int i = 0; i < 7; i++){
+        char *beginName = name[i];
+        copy(beginName, beginName+30,priseList.name_product);
+        priseList.price_one = arr[count_product];
+        count_product++;
+        priseList.prce_all = arr[count_product];
+        count_product++;
+        priseList.count = arr[count_product];
+        count_product++;
+        fwrite(&priseList, sizeof(product), 1, f);
+    }
+    send sendList;
+    FILE *g = fopen("G_my_file.txt", "wb");
+    int countSend[] = {60, 100,10,11,10,1,8};
+    for(int i = 0; i < 7; i++){
+        char *beginName = name[i];
+        copy(beginName, beginName+30,sendList.name_product);
+        sendList.count = countSend[i];
+        fwrite(&sendList, sizeof(sendList), 1, g);
+    }
+    fclose(g);
+    g = fopen("G_my_file.txt", "rb");
+    fseek(f,0L,0);
+    sort_product(f,g);
+    fclose(f);
+    fclose(g);
+    int res[1000];
+    f = fopen("F_my_file.txt", "rb");
+    product got;
+    int size = 0;
+    char got_arr[3000][30];
+    int size_arr = 0;
+    while (feof(f) == 0){
+        if(fread(&got, sizeof(got), 1, f)!=0){
+            res[size] = got.price_one;
+            res[size+1] = got.prce_all;
+            res[size+2] = got.count;
+            size+=3;
+            char *begin_expected = got.name_product;
+            copy(begin_expected, begin_expected+30, got_arr[size_arr]);
+            size_arr++;
+        }
+    }
+    fclose(f);
+    int expected_arr[] = {5000,5000,1};
+    char expected_str[][30] = { "brandy"};
+    bool flag = true;
+    for(int i = 0; i < size_arr;i++){
+        if(!strcmp_(expected_str[i], got_arr[i])){
+            flag = false;
+        }
+    }
+    if(flag){
+        ASSERT_STRING_INT_ARR(expected_arr, 3, res, size);
+    }
+    remove("F_my_file.txt");
+    remove("G_my_file.txt");
+}
 void test_lab19() {
     test1_tusk1();
     test2_tusk1();
@@ -991,5 +1163,7 @@ void test_lab19() {
     test2_tusk8();
     test1_tusk9();
     test2_tusk9();
+    test1_tusk10();
+    test2_tusk10();
 }
 //hhh
