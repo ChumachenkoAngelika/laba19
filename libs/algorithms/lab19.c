@@ -849,7 +849,125 @@ void test2_tusk8(){
     remove("my_file.txt");
 }
 
-
+typedef struct name_list{
+    char fio[1000][50];
+    int size;
+}name_list;
+void sport(FILE *f, int n){
+    name_list names;
+    int arr_value[10000];
+    int value;
+    names.size = 0;
+    while (feof(f) == 0){
+        char name[50] = {0};
+        char *begin = name;
+        if(fread(name, sizeof(name), 1, f) > 0 && fread(&value, sizeof(int), 1, f) == 1){
+            *(copy(begin, begin+ strlen_(begin), names.fio[names.size])) = '\0';
+            arr_value[names.size] = value;
+            names.size++;
+        }
+    }
+    int arr_max_index[1000];
+    int arr_max_value[1000];
+    int size_arr_max_value = 0;
+    for(int i = 0; i < n; i++){
+        int max = 0;
+        int index;
+        for(int j = 0; j < names.size; j++){
+            if(max < arr_value[j]){
+                max = arr_value[j];
+                index = j;
+            }
+        }
+        arr_max_index[size_arr_max_value] = index;
+        arr_max_value[size_arr_max_value] = max;
+        size_arr_max_value++;
+        arr_value[index] = -1;
+    }
+    fseek(f,0L,0);
+    for(int i = 0; i < size_arr_max_value; i++){
+        char tempStr[50] = {0};
+        char *begin = tempStr;
+        copy(names.fio[arr_max_index[i]], names.fio[arr_max_index[i]] + strlen_(names.fio[arr_max_index[i]]), begin);
+        fwrite(tempStr, sizeof(tempStr), 1, f);
+        fwrite(&arr_max_value[i], sizeof(int), 1, f);
+    }
+    chsize(fileno(f), ftell(f));
+}
+void test1_tusk9(){
+    char name[][50] = {"Fokin Sashko Valentinovich", "Sharipov Genadi Antonovich", "James Brown Fedorovich", "Hector Martinez Petrovich", "Ben Floyd Pantileivich", "Shane Owens Aleksandrovich", "Bradley Morales Ivanovich", "Chuma Angelika Vitalevna"};
+    int values[] = {15,35,24,40,28,31,27,-1};
+    FILE *f = fopen("my_file.txt", "w+b");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    for(int i = 0; i < 8; i++){
+        fwrite(name[i], sizeof(name[i]), 1, f);
+        fwrite(&values[i], sizeof(int), 1, f);
+    }
+    fseek(f, 0L,0);
+    sport(f, 5);
+    fclose(f);
+    f = fopen("my_file.txt", "rb");
+    char res[1000];
+    int values_max[5];
+    int size = 0;
+    char *begin = res;
+    while (feof(f) == 0){
+        char fio[50];
+        int val;
+        if(fread(fio, sizeof(fio), 1, f) > 0 && fread(&val, sizeof(int), 1, f) == 1){
+            begin = copy(fio, fio+ strlen_(fio), begin);
+            *begin = ' ';
+            begin++;
+            values_max[size] = val;
+            size++;
+        }
+    }
+    *(begin-1) = '\0';
+    fclose(f);
+    int expected_val[] = {40,35,31,28,27};
+    char expect[] = "Hector Martinez Petrovich Sharipov Genadi Antonovich Shane Owens Aleksandrovich Ben Floyd Pantileivich Bradley Morales Ivanovich";
+    ASSERT_STRING(expect, res)
+    ASSERT_STRING_INT_ARR(expected_val, 5, values_max, size)
+    remove("my_file.txt");
+}
+void test2_tusk9(){
+    char name[][50] = {"Fokin Sashko Valentinovich", "Sharipov Genadi Antonovich", "James Brown Fedorovich", "Hector Martinez Petrovich", "Ben Floyd Pantileivich", "Shane Owens Aleksandrovich", "Bradley Morales Ivanovich", "Chuma Angelika Vitalevna"};
+    int values[] = {28,35,24,40,28,31,28,-1};
+    FILE *f = fopen("my_file.txt", "w+b");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    for(int i = 0; i < 8; i++){
+        fwrite(name[i], sizeof(name[i]), 1, f);
+        fwrite(&values[i], sizeof(int), 1, f);
+    }
+    fseek(f, 0L,0);
+    sport(f, 5);
+    fclose(f);
+    f = fopen("my_file.txt", "rb");
+    char res[1000];
+    int values_max[5];
+    int size = 0;
+    char *begin = res;
+    while (feof(f) == 0){
+        char fio[50];
+        int val;
+        if(fread(fio, sizeof(fio), 1, f) > 0 && fread(&val, sizeof(int), 1, f) == 1){
+            begin = copy(fio, fio+ strlen_(fio), begin);
+            *begin = ' ';
+            begin++;
+            values_max[size] = val;
+            size++;
+        }
+    }
+    *(begin-1) = '\0';
+    fclose(f);
+    int expected_val[] = {40,35,31,28,28};
+    char expect[] = "Hector Martinez Petrovich Sharipov Genadi Antonovich Shane Owens Aleksandrovich Fokin Sashko Valentinovich Ben Floyd Pantileivich";
+    ASSERT_STRING(expect, res)
+    ASSERT_STRING_INT_ARR(expected_val, 5, values_max, size)
+    remove("my_file.txt");
+}
 void test_lab19() {
     test1_tusk1();
     test2_tusk1();
@@ -871,5 +989,7 @@ void test_lab19() {
     test2_tusk7();
     test1_tusk8();
     test2_tusk8();
+    test1_tusk9();
+    test2_tusk9();
 }
 //hhh
