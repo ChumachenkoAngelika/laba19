@@ -494,7 +494,7 @@ void more_large_word(FILE *f){
 
 
 void test1_tusk5(){
-    char s[10000] = "ggasefasfffff aesdf\nggasefasf elmberr\nekoveuv ejweuvr\nerwhcvuiev daverwer homE verte\nttttwegvsdv egvwvsdv";
+    char s[10000] = "ggasefas aesdf\nggasefasf jjofl\nekoveuv d\nerwhcvuievhome verte\nttttwegvsdv egvwvsdv";
     FILE *f = fopen("my_file.txt", "w+");
     fputs(s, f);
     fseek(f, 0L,0);
@@ -513,7 +513,30 @@ void test1_tusk5(){
     }
     res[size-1]='\0';
     fclose(file);
-    ASSERT_STRING("ggasefasfffff\nggasefasf\nekoveuv\nerwhcvuiev\nttttwegvsdv", res);
+    ASSERT_STRING("ggasefas\nggasefasf\nekoveuv\nerwhcvuievhome\nttttwegvsdv", res);
+    remove("my_file.txt");
+}
+void test_dop(){
+    char s[10000] = "contemporary people\nconversation thing\ndemonstration woman";
+    FILE *f = fopen("my_file.txt", "w+");
+    fputs(s, f);
+    fseek(f, 0L, 0);
+    more_large_word(f);
+    fclose(f);
+    FILE *file = fopen("my_file.txt", "r");
+    if (file == NULL){
+        printf("NULL");
+        return;
+    }
+    char res[10000];
+    int size = 0;
+    while (feof(file) == 0){
+        res[size] = (char)(getc(file));
+        size++;
+    }
+    res[size - 1] = '\0';
+    fclose(file);
+    ASSERT_STRING("contemporary\nconversation\ndemonstration", res);
     remove("my_file.txt");
 }
 
@@ -658,6 +681,93 @@ void test2_tusk6(){
     remove("my_file.txt");
 }
 
+//7 number
+void ordValues(FILE *f){
+    int value;
+    int size_plus = 0;
+    int size_minus = 0;
+    int values_plus[100000];
+    int values_minus[100000];
+    while (feof(f) == 0){
+        if(fread(&value, sizeof(int), 1, f) == 1){
+            if(value>0) {
+                values_plus[size_plus] = value;
+                size_plus++;
+            }
+            else {
+                values_minus[size_minus] = value;
+                size_minus++;
+            }
+        }
+    }
+    fseek(f,0L,0);
+    for(int i = 0; i < size_plus; i++){
+        fwrite(&values_plus[i], sizeof(int), 1, f);
+    }
+    for(int i = 0; i < size_minus; i++){
+        fwrite(&values_minus[i], sizeof(int), 1, f);
+    }
+}
+void test1_tusk7(){
+    int arr[] = {1,-5,-6,-8,-9,2,1,7,-11,-20,2,54,101,-1,INT_MAX, INT_MIN};
+    FILE *f = fopen("my_file.txt", "wb");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    fwrite(arr, sizeof(arr), 1, f);
+    fclose(f);
+    f = fopen("my_file.txt", "r+b");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    ordValues(f);
+    fclose(f);
+    f = fopen("my_file.txt", "rb");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    int res[100000];
+    int size = 0;
+    while (feof(f) == 0){
+        int value;
+        if(fread(&value, sizeof(int), 1, f)==1){
+            res[size] = value;
+            size++;
+        }
+    }
+    fclose(f);
+    int expected[] = {1,2,1,7,2,54,101,INT_MAX,  -5,-6,-8,-9,-11,-20,-1,INT_MIN};
+    ASSERT_STRING_INT_ARR(expected, 16, res, size)
+    remove("my_file.txt");
+}
+
+void test2_tusk7(){
+    int arr[] = {-1,-5,-6,-8,-9,-2,-1,7,11,20,2,54,101,1,INT_MAX, INT_MIN};
+    FILE *f = fopen("my_file.txt", "wb");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    fwrite(arr, sizeof(arr), 1, f);
+    fclose(f);
+    f = fopen("my_file.txt", "r+b");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    ordValues(f);
+    fclose(f);
+    f = fopen("my_file.txt", "rb");
+    if(f == NULL)
+        fprintf(stderr, "fail");
+    int res[100000];
+    int size = 0;
+    while (feof(f) == 0){
+        int value;
+        if(fread(&value, sizeof(int), 1, f)==1){
+            res[size] = value;
+            size++;
+        }
+    }
+    fclose(f);
+    int expected[] = {7,11,20,2,54,101,1,INT_MAX,-1,-5,-6,-8,-9,-2,-1,INT_MIN};
+    ASSERT_STRING_INT_ARR(expected, 16, res, size)
+    remove("my_file.txt");
+}
+
 void test_lab19() {
     test1_tusk1();
     test2_tusk1();
@@ -672,6 +782,10 @@ void test_lab19() {
     test3_tusk4();
     test1_tusk5();
     test2_tusk5();
+    test_dop();
     test1_tusk6();
     test2_tusk6();
+    test1_tusk7();
+    test2_tusk7();
 }
+//hhh
