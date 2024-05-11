@@ -20,4 +20,8 @@ add_executable(Project17 main.c
         libs/data_struct/string/processing_string.h
         libs/data_struct/string/processing_string.c
         libs/algorithms/lab19.c
+        libs/algorithms/lab_20/laba_20.c
+        libs/algorithms/lab_20/lab_20.h
+        libs/algorithms/lab_20/test20.c
+        libs/algorithms/lab_20/test20.h
 )
