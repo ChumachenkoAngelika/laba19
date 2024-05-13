@@ -8,5 +8,5 @@ void updateMatrix(int matrix[MAX_N][MAX_N], int n, int query[][4], int len);
 
 void printMatrix(int matrix[MAX_N][MAX_N], int n);
 
-
+void gameOfLife(int** board, int boardSize, int* boardColSize);
 #endif //PROJECT17_LAB_20_H

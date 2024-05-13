@@ -79,6 +79,22 @@ void test_4() {
 }
 
 
+void test_5() {
+        int n = 4;
+        int m = 3;
+        int matrix[4][3] = {{0,1,0},{0,0,1},{1,1,1},{0,0,0}};
+
+        gameOfLife(*matrix, n, m);
+
+        int resMatrix[4][3] = {{0,0,0},{1,0,1},{0,1,1},{0,1,0}};
+        for (int z = 0; z < n; z++) {
+                for (int x = 0; x < m; x++) {
+                        assert(matrix[z][x] == resMatrix[z][x]);
+                }
+        }
+
+}
+
 void test_for_20laba(){
     test_1();
     test_2();

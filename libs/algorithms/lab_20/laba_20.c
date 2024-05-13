@@ -27,3 +27,51 @@ void printMatrix(int matrix[MAX_N][MAX_N], int n) {
         printf("\n");
     }
 }
+
+
+
+
+void gameOfLife(int** board, int boardSize, int* boardColSize){
+    int m = boardSize;
+    int n = *boardColSize;
+
+    int directions[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+
+    int newBoard[m][n];
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            int liveCount = 0;
+
+            for (int k = 0; k < 8; k++) {
+                int x = i + directions[k][0];
+                int y = j + directions[k][1];
+
+                if (x >= 0 && x < m && y >= 0 && y < n && board[x][y] > 0) {
+                    liveCount++;
+                }
+            }
+
+            if (board[i][j] > 0) {
+                if (liveCount < 2 || liveCount > 3) {
+                    newBoard[i][j] = 0;
+                } else {
+                    newBoard[i][j] = 1;
+                }
+            } else {
+                if (liveCount == 3) {
+                    newBoard[i][j] = 1;
+                } else {
+                    newBoard[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            board[i][j] = newBoard[i][j];
+        }
+    }
+}
+
