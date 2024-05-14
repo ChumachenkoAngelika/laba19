@@ -75,3 +75,31 @@ void gameOfLife(int** board, int boardSize, int* boardColSize){
     }
 }
 
+
+
+void medianFilter(int matrix[ROWS][COLS], int filter) {
+    int temp[filter * filter];
+    int half = filter / 2;
+
+    for (int i = half; i < ROWS - half; i++) {
+        for (int j = half; j < COLS - half; j++) {
+            int k = 0;
+            for (int x = i - half; x <= i + half; x++) {
+                for (int y = j - half; y <= j + half; y++) {
+                    temp[k++] = matrix[x][y];
+                }
+            }
+            for (int p = 0; p < filter * filter - 1; p++) {
+                for (int q = 0; q < filter * filter - p - 1; q++) {
+                    if (temp[q] > temp[q+1]) {
+                        int a = temp[q];
+                        temp[q] = temp[q+1];
+                        temp[q+1] = a;
+                    }
+                }
+            }
+            matrix[i][j] = temp[filter * filter / 2];
+        }
+    }
+}
+

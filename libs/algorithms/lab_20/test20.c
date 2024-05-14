@@ -95,9 +95,76 @@ void test_5() {
 
 }
 
+
+
+
+
+
+
+void testMedianFilter_1() {
+        int matrix1[ROWS][COLS] = {
+                {10, 20, 30},
+                {25, 35, 45},
+                {15, 25, 35}
+        };
+        int expected1[ROWS][COLS] = {
+                {10, 20, 30},
+                {25, 25, 45},
+                {15, 25, 35}
+        };
+        medianFilter(matrix1, 3);
+        for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLS; j++) {
+                        assert(matrix1[i][j] == expected1[i][j]);
+                }
+        }
+}
+
+void testMedianFilter_2() {
+        int matrix3[ROWS][COLS] = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        };
+        int expected3[ROWS][COLS] = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        };
+        medianFilter(matrix3, 1);
+        for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLS; j++) {
+                        assert(matrix3[i][j] == expected3[i][j]);
+                }
+        }
+
+}
+
+void testMedianFilter_3() {
+        int matrix2[ROWS][COLS] = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        };
+        int expected2[ROWS][COLS] = {
+                {1, 2, 3},
+                {2, 3, 4},
+                {4, 5, 6}
+        };
+        medianFilter(matrix2, 2);
+        for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLS; j++) {
+                        assert(matrix2[i][j] == expected2[i][j]);
+                }
+        }
+}
 void test_for_20laba(){
-    test_1();
-    test_2();
-    test_3();
-    test_4();
+        test_1();
+        test_2();
+        test_3();
+        test_4();
+        test_5();
+        testMedianFilter_1();
+        testMedianFilter_2();
+        testMedianFilter_3();
 }
