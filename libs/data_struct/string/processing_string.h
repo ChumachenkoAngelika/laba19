@@ -130,4 +130,7 @@ bool mask_in_str(WordDescriptor *word, char *mask);
 
 //находит наибольшее слово в строке
 void largestWord(char *s, char *big);
+
+
+char* point_in_string(const char* str);
 #endif //PROJECT17_PROCESSING_STRING_H

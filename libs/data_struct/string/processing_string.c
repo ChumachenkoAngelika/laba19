@@ -4,6 +4,8 @@
 
 #include "processing_string.h"
 
+#include <string.h>
+
 BagOfWords _bag;
 BagOfWords _bag2;
 
@@ -794,4 +796,13 @@ void largestWord(char *s, char *big){
         }
     }
     _bag.size = 0;
+}
+
+char* point_in_string(const char* str) {
+    const char* point = strchr(str, '.');
+    if (point) {
+        return (char*)point;
+    } else {
+        return NULL;
+    }
 }

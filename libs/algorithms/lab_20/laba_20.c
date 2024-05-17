@@ -1,6 +1,8 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include "lab_20.h"
 
+#include "../../data_struct/string/processing_string.h"
 
 void updateMatrix(int matrix[MAX_N][MAX_N], int n, int query[][4], int len) {
     int i, j, k;
@@ -18,6 +20,7 @@ void updateMatrix(int matrix[MAX_N][MAX_N], int n, int query[][4], int len) {
     }
 }
 
+
 void printMatrix(int matrix[MAX_N][MAX_N], int n) {
     int i, j;
     for (i = 0; i < n; i++) {
@@ -27,50 +30,56 @@ void printMatrix(int matrix[MAX_N][MAX_N], int n) {
         printf("\n");
     }
 }
+int countNeighbors(int *matrix, int n, int m, int col, int row) {
+    int (*tempMatrix)[m] = (int (*)[m])matrix;
+    int row1 = row - 1;
+    int row2 = row + 1;
+    int col1 = col - 1;
+    int col2 = col + 1;
 
+    row1 = row1 < 0 ? 0 : row1;
+    row2 = row2 >= n ? n - 1 : row2;
+    col1 = col1 < 0 ? 0 : col1;
+    col2 = col2 >= m ? m - 1 : col2;
 
-
-
-void gameOfLife(int** board, int boardSize, int* boardColSize){
-    int m = boardSize;
-    int n = *boardColSize;
-
-    int directions[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
-
-    int newBoard[m][n];
-
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            int liveCount = 0;
-
-            for (int k = 0; k < 8; k++) {
-                int x = i + directions[k][0];
-                int y = j + directions[k][1];
-
-                if (x >= 0 && x < m && y >= 0 && y < n && board[x][y] > 0) {
-                    liveCount++;
-                }
+    int counter = 0;
+    for (int i = row1; i <= row2; i++) {
+        for (int j = col1; j <= col2; j++) {
+            if ((i == row) && (j == col)) {
+                continue;
             }
 
-            if (board[i][j] > 0) {
-                if (liveCount < 2 || liveCount > 3) {
-                    newBoard[i][j] = 0;
-                } else {
-                    newBoard[i][j] = 1;
-                }
-            } else {
-                if (liveCount == 3) {
-                    newBoard[i][j] = 1;
-                } else {
-                    newBoard[i][j] = 0;
-                }
-            }
+            counter += tempMatrix[i][j];
+        }
+    }
+    return counter;
+}
+
+void liveGame(int *matrix, size_t n, size_t m) {
+    int (*tempMatrix)[m] = (int (*)[m])matrix;
+    int sums[n][m];
+    int (*tempMatrix1)[m] = (int (*)[m])sums;
+    for (int row = 0; row < n; row++) {
+        for (int col = 0; col < m; col++) {
+            int res = countNeighbors(matrix, n,  m, col, row);
+            sums[row][col] = res;
         }
     }
 
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            board[i][j] = newBoard[i][j];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (tempMatrix[i][j] == 1 && tempMatrix1[i][j] < 2) {
+                tempMatrix[i][j] = 0;
+            }
+            if (tempMatrix[i][j] == 1 && (tempMatrix1[i][j] == 2 || tempMatrix1[i][j] == 3)) {
+                tempMatrix[i][j] = 1;
+            }
+            if (tempMatrix[i][j] == 1 && tempMatrix1[i][j] > 3) {
+                tempMatrix[i][j] = 0;
+            }
+            if (tempMatrix[i][j] == 0 && tempMatrix1[i][j] == 3) {
+                tempMatrix[i][j] = 1;
+            }
         }
     }
 }
@@ -103,3 +112,37 @@ void medianFilter(int matrix[ROWS][COLS], int filter) {
     }
 }
 
+
+
+void add_in_array_domain_count(array_domain_count *bag, domain_string_value domain) {
+    bool flag_new = true;
+    if (bag->size != 0) {
+        for (int i = 0; i < bag->size; i++) {
+            if (strcmp_(bag->array[i].name, domain.name)) {
+                bag->array[i].data += domain.data;
+                flag_new = false;
+            }
+        }
+    }
+    if (flag_new) {
+        char *begin = domain.name;
+        *copy(begin, begin + strlen_(begin), bag->array[bag->size].name) = '\0';
+        bag->array[bag->size].data = domain.data;
+        bag->size++;
+    }
+}
+
+void count_search(char *string, char *res, int *size) {
+    char *begin = string;
+    while (*begin != '\0') {
+        if (*begin >= '0' && *begin <= '9') {
+            res[*size] = *begin;
+            (*size)++;
+            begin++;
+        } else {
+            res[*size] = '\0';
+            *size += 1;
+            return;
+        }
+    }
+}
