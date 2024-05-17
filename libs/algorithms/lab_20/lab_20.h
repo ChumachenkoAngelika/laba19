@@ -30,10 +30,23 @@ void printMatrix(int matrix[MAX_N][MAX_N], int n);
 void liveGame(int *matrix, size_t n, size_t m);
 
 void medianFilter(int matrix[ROWS][COLS], int filter);
+void count_domain(char (*arr)[100], int size, array_domain_count *bag_domain) ;
+
+char* point_in_string(const char* str);
 
 void add_in_array_domain_count(array_domain_count *bag, domain_string_value domain);
 
 void count_search(char *string, char *res, int *size);
+
+
 void median_filter(matrix *m, int filter);
+
+
+
+int sumOfValueArray(int *a, int size);
+
+void end_pattern_numb(const char *pattern, int cur, int *arr, int *bin_arr,bool *flag_end);
+
+void start_pattern_numb(const char *pattern, int cur, int *arr, int *bin_arr, bool *flag_end);
 
 #endif //PROJECT17_LAB_20_H

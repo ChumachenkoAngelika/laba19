@@ -163,26 +163,6 @@ void testAll_liveGame() {
 
 
 
-void count_domain(char (*arr)[100], int size, array_domain_count *bag_domain) {
-    bag_domain->size = 0;
-    for (int i = 0; i < size; i++) {
-        char count_str[100];
-        char *begin = arr[i];
-        int shift = 0;
-        count_search(begin, count_str, &shift);
-        int count = atoi(count_str);
-        begin += shift;
-        while (point_in_string(begin - 1)) {
-            domain_string_value data_domain;
-            data_domain.data = count;
-            char *copy_in = data_domain.name;
-            *copy(begin, begin + strlen_(begin), copy_in) = '\0';
-            add_in_array_domain_count(bag_domain, data_domain);
-            begin = find_symbl(begin, '.');
-            begin++;
-        }
-    }
-}
 
 void tusk4_test1() {
     array_domain_count bag;
@@ -238,6 +218,41 @@ void tusk5_test1() {
         assert(res_arr[i] == expected[i]);
     }
 }
+
+void tusk6_test1() {
+    char *pattern = "IIIDIDDD";
+    int size = strlen_(pattern) + 1;
+    int arr[9] = {0};
+    int bin_arr[9] = {1,1,1,1,1,1,1,1,1};
+    bool flag = false;
+    start_pattern_numb(pattern, 0, arr, bin_arr, &flag);
+    int got_arr[size];
+    for (int i = 0; i < size; i++) {
+        got_arr[i] = arr[i];
+    }
+    int expected[] = {1,2,3,5,4,9,8,7,6};
+    for (int i = 0; i < size; i++) {
+        assert(expected[i] == got_arr[i]);
+    }
+}
+
+void tusk6_test2() {
+    char *pattern = "DDD";
+    int size = strlen_(pattern) + 1;
+    int arr[9] = {0};
+    int bin_arr[9] = {1,1,1,1,1,1,1,1,1};
+    bool flag = false;
+    start_pattern_numb(pattern, 0, arr, bin_arr, &flag);
+    int got_arr[size];
+    for (int i = 0; i < size; i++) {
+        got_arr[i] = arr[i];
+    }
+    int expected[] = {4,3,2,1};
+    for (int i = 0; i < size; i++) {
+        assert(expected[i] == got_arr[i]);
+    }
+}
+
 void test_for_20laba(){
     test_1();
     test_2();
@@ -247,4 +262,6 @@ void test_for_20laba(){
     tusk4_test1();
     tusk4_test2();
     tusk5_test1();
+    tusk6_test1();
+    tusk6_test2();
 }

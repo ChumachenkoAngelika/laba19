@@ -1,5 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
+
+
 #include "lab_20.h"
 
 #include "../../data_struct/string/processing_string.h"
@@ -85,6 +87,26 @@ void liveGame(int *matrix, size_t n, size_t m) {
 }
 
 
+void count_domain(char (*arr)[100], int size, array_domain_count *bag_domain) {
+    bag_domain->size = 0;
+    for (int i = 0; i < size; i++) {
+        char count_str[100];
+        char *begin = arr[i];
+        int shift = 0;
+        count_search(begin, count_str, &shift);
+        int count = atoi(count_str);
+        begin += shift;
+        while (point_in_string(begin - 1)) {
+            domain_string_value data_domain;
+            data_domain.data = count;
+            char *copy_in = data_domain.name;
+            *copy(begin, begin + strlen_(begin), copy_in) = '\0';
+            add_in_array_domain_count(bag_domain, data_domain);
+            begin = find_symbl(begin, '.');
+            begin++;
+        }
+    }
+}
 
 void medianFilter(int matrix[ROWS][COLS], int filter) {
     int temp[filter * filter];
@@ -175,4 +197,55 @@ void median_filter(matrix *m, int filter) {
 }
 
 
+int sumOfValueArray(int *a, int size){
+    int sum = 0;
+    for(int i = 0; i < size; i++)
+        sum+=a[i];
+    return sum;
+}
+
+void end_pattern_numb(const char *pattern, int cur, int *arr, int *bin_arr,bool *flag_end){
+
+    for (int i = 1; i <= 9; i++) {
+        if(cur == strlen_(pattern)){
+            *flag_end = true;
+            return;
+        }
+        if (bin_arr[i - 1] == 1) {
+            arr[cur+1] = i;
+            bin_arr[i - 1] = 0;
+            if (pattern[cur] == 'I' && arr[cur] < arr[cur+1]) {
+                end_pattern_numb(pattern, cur + 1, arr, bin_arr,flag_end);
+                if(sumOfValueArray(bin_arr, 9) == 0){
+                    *flag_end = true;
+                    return;
+                }
+            }
+            else if (pattern[cur] == 'D' && arr[cur] > arr[cur+ 1]) {
+                end_pattern_numb(pattern, cur + 1, arr, bin_arr, flag_end);
+                if(sumOfValueArray(bin_arr, 9) == 0){
+                    *flag_end = true;
+                    return;
+                }
+            }
+            if(*flag_end){
+                return;
+            }
+            bin_arr[i - 1] = 1;
+
+        }
+    }
+
+}
+void start_pattern_numb(const char *pattern, int cur, int *arr, int *bin_arr, bool *flag_end) {
+    for (int i = 1; i < 10; i++) {
+        arr[cur] = i;
+        bin_arr[i - 1] = 0;
+        end_pattern_numb(pattern, cur, arr, bin_arr, flag_end);
+        if(*flag_end){
+            return;
+        }
+        bin_arr[i - 1] = 1;
+    }
+}
 
