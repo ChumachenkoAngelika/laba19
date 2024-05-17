@@ -1,6 +1,8 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "../../data_struct/string/processing_string.h"
 #include "lab_20.h"
 #define ASSERT_STRING_INT_ARR_CHAR_ARRAY(expectedInt, size_expectedInt, gotInt, size_gotInt, size_expecded_charArray, charArray_expected, size_got_charArray, charArray_got) assertStringIntArrAndStrArr(expectedInt, size_expectedInt, gotInt, size_gotInt, size_expecded_charArray, charArray_expected, size_got_charArray, charArray_got, __FILE__, __FUNCTION__, __LINE__);
@@ -161,7 +163,6 @@ void testAll_liveGame() {
 
 
 
-
 void count_domain(char (*arr)[100], int size, array_domain_count *bag_domain) {
     bag_domain->size = 0;
     for (int i = 0; i < size; i++) {
@@ -219,6 +220,24 @@ void tusk4_test2() {
     ASSERT_STRING_INT_ARR_CHAR_ARRAY(int_arr_expected, 7, array_count_got, size_array, 7, char_arr_expected, size_array, array_name_got);
 }
 
+
+void tusk5_test1() {
+    int arr[] = {10, 20, 30, 25, 25, 45, 15, 25, 35};
+    matrix m = createMatrixFromArray(arr, 3, 3);
+    median_filter(&m, 3);
+    int res_arr[9];
+    int size = 0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            res_arr[size] = m.values[i][j];
+            size++;
+        }
+    }
+    int expected[] = {10, 20, 30, 25, 25, 45, 15, 25, 35};
+    for (int i = 0; i < 9; i++) {
+        assert(res_arr[i] == expected[i]);
+    }
+}
 void test_for_20laba(){
     test_1();
     test_2();
@@ -227,4 +246,5 @@ void test_for_20laba(){
     testAll_liveGame();
     tusk4_test1();
     tusk4_test2();
+    tusk5_test1();
 }

@@ -3,7 +3,7 @@
 #include "lab_20.h"
 
 #include "../../data_struct/string/processing_string.h"
-
+#include "../../data_struct/matrix/matrix.h"
 void updateMatrix(int matrix[MAX_N][MAX_N], int n, int query[][4], int len) {
     int i, j, k;
     for (k = 0; k < len; k++) {
@@ -146,3 +146,33 @@ void count_search(char *string, char *res, int *size) {
         }
     }
 }
+
+
+void median_filter(matrix *m, int filter) {
+    int temp[filter * filter];
+    int half = filter / 2;
+
+    for (int i = half; i < m->nRows - half; i++) {
+        for (int j = half; j < m->nCols - half; j++) {
+            int k = 0;
+            for (int x = i - half; x <= i + half; x++) {
+                for (int y = j - half; y <= j + half; y++) {
+                    temp[k++] = m->values[x][y];
+                }
+            }
+            for (int p = 0; p < filter * filter - 1; p++) {
+                for (int q = 0; q < filter * filter - p - 1; q++) {
+                    if (temp[q] > temp[q+1]) {
+                        int a = temp[q];
+                        temp[q] = temp[q+1];
+                        temp[q+1] = a;
+                    }
+                }
+            }
+            m->values[i][j] = temp[filter * filter / 2];
+        }
+    }
+}
+
+
+

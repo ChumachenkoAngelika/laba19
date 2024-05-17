@@ -3,6 +3,7 @@
 #ifndef PROJECT17_LAB_20_H
 #define PROJECT17_LAB_20_H
 
+#include "../../data_struct/matrix/matrix.h"
 typedef struct domain_string_value {
     char name[1000];
     int data;
@@ -33,4 +34,6 @@ void medianFilter(int matrix[ROWS][COLS], int filter);
 void add_in_array_domain_count(array_domain_count *bag, domain_string_value domain);
 
 void count_search(char *string, char *res, int *size);
+void median_filter(matrix *m, int filter);
+
 #endif //PROJECT17_LAB_20_H
