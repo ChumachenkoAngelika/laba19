@@ -253,6 +253,43 @@ void tusk6_test2() {
     }
 }
 
+void tusk7_test1() {
+    int arr[] = {10, 20, 30, 25, 35, 45, 15, 25, 35};
+    matrix m = createMatrixFromArray(arr, 3, 3);
+    median_filter(&m, 3);
+    int res_arr[9];
+    int size = 0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            res_arr[size] = m.values[i][j];
+            size++;
+        }
+    }
+    int expected[] = {10, 20, 30, 25, 25, 45, 15, 25, 35};
+    for (int i = 0; i < 9; i++) {
+        assert(expected[i] == res_arr[i]);
+    }
+}
+
+void tusk7_test2() {
+    int arr[] = {10, 20, 30, 25, 35, 45, 15, 25, 35, 20, 20, 20, 20, 35, 40, 5, 10, 15, 35, 25, 20, 30, 50, 25, 10};
+    matrix m = createMatrixFromArray(arr, 5, 5);
+    median_filter(&m, 5);
+    int res_arr[25];
+    int size = 0;
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            res_arr[size] = m.values[i][j];
+            size++;
+        }
+    }
+    int expected[] = {10, 20, 30, 25, 35, 45, 15, 25, 35, 20, 20, 20, 25, 35, 40, 5, 10, 15, 35, 25, 20, 30, 50, 25, 10};
+    for (int i = 0; i < 25; i++) {
+        assert(expected[i] == res_arr[i]);
+    }
+}
+
+
 void test_for_20laba(){
     test_1();
     test_2();
@@ -264,4 +301,6 @@ void test_for_20laba(){
     tusk5_test1();
     tusk6_test1();
     tusk6_test2();
+    tusk7_test1();
+    tusk7_test2();
 }

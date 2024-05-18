@@ -15,6 +15,20 @@ typedef struct array_domain_count {
 } array_domain_count;
 
 
+typedef struct list{
+    int data;
+    struct list *left;
+    struct list *right;
+    int neighbour;
+}list;
+
+
+list static *creat_list(int data){
+    list *node = malloc(sizeof(list));
+    node->data = data;
+    node->neighbour=0;
+    return node;
+}
 #define MAX_N 100
 #define ROWS 3
 #define COLS 3
@@ -49,4 +63,9 @@ void end_pattern_numb(const char *pattern, int cur, int *arr, int *bin_arr,bool 
 
 void start_pattern_numb(const char *pattern, int cur, int *arr, int *bin_arr, bool *flag_end);
 
+
+list *push_list(int data, int flag, list *node);
+int find_indx_maxValue_border(int *arr, int border_left, int border_right);
+void trees(int *arr, int border_left, int border_right, list *tree, int max_size_arr);
+void BFS_list(list *tree[1000], int size, int *arr_res, int  *res_size);
 #endif //PROJECT17_LAB_20_H

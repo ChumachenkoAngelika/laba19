@@ -4,8 +4,8 @@
 #include "string_.h"
 
 //подсчёт длины строки
-size_t strlen_(char *begin) {
-    char *end = begin;
+size_t strlen_(const char *begin){
+    char *end = (char *)begin;
     while (*end != '\0') {
         end++;
     }

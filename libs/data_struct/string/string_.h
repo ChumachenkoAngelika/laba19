@@ -12,8 +12,8 @@
 
 
 //подсчёт длины строки
-size_t strlen_(char *begin);
 
+size_t strlen_(const char *begin);
 //возвращает указатель
 //на первый элемент с кодом ch,
 char* find(char *begin, char *end, int ch);
