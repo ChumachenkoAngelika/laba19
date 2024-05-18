@@ -329,3 +329,14 @@ void BFS_list(list *tree[1000], int size, int *arr_res, int  *res_size){
     BFS_list(tempArr, temp_size, arr_res, res_size);
 
 }
+
+void change_letters(int *arr, char *s){
+    int size_s = strlen_(s);
+    char temp_string[size_s+1];
+    for(int i = 0; i < size_s; i++){
+        *(temp_string+arr[i]) = *(s+i);
+    }
+    for (int i = 0; i < size_s; i++) {
+        *(s+i )= *(temp_string+i);
+    }
+}

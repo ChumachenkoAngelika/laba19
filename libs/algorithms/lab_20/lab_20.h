@@ -65,7 +65,13 @@ void start_pattern_numb(const char *pattern, int cur, int *arr, int *bin_arr, bo
 
 
 list *push_list(int data, int flag, list *node);
+
 int find_indx_maxValue_border(int *arr, int border_left, int border_right);
+
 void trees(int *arr, int border_left, int border_right, list *tree, int max_size_arr);
+
 void BFS_list(list *tree[1000], int size, int *arr_res, int  *res_size);
+
+
+void change_letters(int *arr, char *s);
 #endif //PROJECT17_LAB_20_H

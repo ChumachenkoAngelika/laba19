@@ -289,6 +289,30 @@ void tusk7_test2() {
     }
 }
 
+void tusk8_test1(){
+    int arr[] = {0,1,2};
+    char s[] = "abc";
+    change_letters(arr,s);
+    char expected[] = "abc";
+    assert(strcmp(expected, s) == 0);
+}
+
+void tusk8_test2(){
+    int arr[] = {0,3,2,1};
+    char s[] = "abap";
+    change_letters(arr,s);
+    char expected[] = "apab";
+    assert(strcmp(expected, s) == 0);
+}
+
+void tusk8_test3(){
+    int arr[] = {5,4,3,2,1,0};
+    char s[] = "zxcvbn";
+    change_letters(arr,s);
+    char expected[] = "nbvcxz";
+    assert(strcmp(expected, s) == 0);
+}
+
 
 void test_for_20laba(){
     test_1();
@@ -303,4 +327,8 @@ void test_for_20laba(){
     tusk6_test2();
     tusk7_test1();
     tusk7_test2();
+    tusk8_test1();
+    tusk8_test2();
+    tusk8_test3();
+
 }
