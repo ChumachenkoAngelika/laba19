@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -360,4 +361,3 @@ char *find_suffix(char *s){
         return NULL;
     return dot;
 }
-

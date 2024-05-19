@@ -342,6 +342,7 @@ void tusk9_test1(){
     }
 }
 
+
 void test_for_20laba(){
     test_1();
     test_2();

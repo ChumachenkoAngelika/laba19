@@ -78,4 +78,7 @@ void change_letters(int *arr, char *s);
 void make_file(FILE *f, int N);
 
 char *find_suffix(char *s);
+
+
+
 #endif //PROJECT17_LAB_20_H
