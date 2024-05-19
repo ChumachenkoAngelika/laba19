@@ -74,4 +74,8 @@ void BFS_list(list *tree[1000], int size, int *arr_res, int  *res_size);
 
 
 void change_letters(int *arr, char *s);
+
+void make_file(FILE *f, int N);
+
+char *find_suffix(char *s);
 #endif //PROJECT17_LAB_20_H

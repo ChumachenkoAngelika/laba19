@@ -340,3 +340,24 @@ void change_letters(int *arr, char *s){
         *(s+i )= *(temp_string+i);
     }
 }
+
+
+void make_file(FILE *f, int N){
+    FILE *res = fopen("res.txt", "w");
+    while (feof(f) == 0){
+        int value;
+        if(fscanf(f,"%d",&value) != 0){
+            if(value < N)
+                fprintf(res, "%d ", value);
+        }
+    }
+    fclose(res);
+}
+
+char *find_suffix(char *s){
+    char *dot = find_symbl(s, '.');
+    if(*dot == '\0')
+        return NULL;
+    return dot;
+}
+
